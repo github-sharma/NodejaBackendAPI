@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const connectionURL = 'mongodb+srv://GigaYasa:GigaYasa@cluster0.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const databaseName = 'API'
 
-mongoose.connect(connectionURL)
+mongoose.connect(connectionURL,{ autoIndex:true })
 
 
 

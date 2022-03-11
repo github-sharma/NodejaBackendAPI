@@ -1,7 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 require('./db/mongoose.js')
-//const date = require('date-and-time')
+const date = require('date-and-time')
 const userData = require('./models/users.js')
 const router = new express.Router()
 
@@ -45,20 +45,83 @@ const app = express()
 
 app.use(express.json())
 
- app.post('/users', async (req,res)=>{
+app.post('/user_install', async (req,res)=>{
 
   
 
    userData1 = userData(req.body)
-  // userData1.password = await bcrypt.hash(userData1.password , 8)
-   userData1.save().then(()=>{
-    res.send(userData1)}).catch((e)=>{
-      res.status(400).send(e)})
-    
+   userData1.dateInst= new Date()
+   userData1.dateLastUse = new Date()
+   userData1.password = await bcrypt.hash(userData1.password , 8)
+  const user1 = await userData.findOne({ License_key:req.body.License_key })
+  const user2 = await userData.findOne({ userName:req.body.userName })
+  if(user1 && user1.Inactive === false)
+  { res.status(400).send("License Already Used!")}
+  
+  else if(user1 && user1.Inactive === true){
+
+   if(user2){
+     res.status(400).send("UserName is not available!")
+   }
+   else{
+     //req.body.dateInst = user1.dateInst
+    // userData1.dateInst = user1.dateInst
+    // await userData.deleteOne({ License_key:req.body.License_key })
+    // await userData1.save().then(()=>{
+    //       res.send(userData1)}).catch((e)=>{
+    //        res.status(400).send(e)})
+    userData.findOneAndUpdate({ License_key:userData1.License_key }, { $set: { 
+      Name: req.body.Name, 
+      eMail:req.body.eMail,
+      password:userData1.password,
+      UUID:req.body.UUID,
+      userName:req.body.userName,
+      Inactive:false,
+      License_key:user1.License_key,
+      dateLastUse: new Date(),
+      dateInst:user1.dateInst
+     }
+    }, (error,data)=>{
+      if(error)
+      {res.status(503).send(error)}
+      else
+      res.status(200).send(data)
+
+    })
+
+
+
+
+  }}
+  else{
+    if(user2){
+      res.status(400).send("userName is not available!")
+    }
+    else{
+    await userData1.save().then(()=>{
+      res.send(userData1)}).catch((e)=>{
+        res.status(400).send(e)})
+
+  }}
   //res.send('testing')
 })
 
-app.get('/users/:id' , (req , res)=> {
+app.post('/user_uninstall' , (req,res)=>{
+
+  userData.findOneAndUpdate({License_key:req.body.License_key}, { $set: { Inactive: true }} , (error,data)=>
+  {
+   if(error)
+   {res.status(502).send(error)} 
+   else 
+   {res.send("Uninstallation Successful!")}
+  }
+  )
+   
+
+
+})
+
+app.get('/user_data/:id' , (req , res)=> {
    
   const _id = req.params.id   //access the id provided
   userData.findById(_id).then((user)=>{
@@ -72,18 +135,19 @@ app.get('/users/:id' , (req , res)=> {
 
 })
 
-app.post('/users/login' , async (req , res)=>{
+app.post('/user_data/login' , async (req , res)=>{
 
 //  console.log(req.body.eMail )
 //  res.send(req.body.eMail)
 
   try {
-  const user = await userData.findByCredentials(req.body.eMail , req.body.password)
+  const user = await userData.findByCredentials(req.body.userName , req.body.password)
 
-  
-  res.send(user)
+  if(req.body.UUID === user.UUID){
+  res.send(user)}
+  else{res.status(400).send("INVALID CREDENTIALS")}
   } catch (e) {
-    res.status(400).send(e)
+    res.status(400).send("user_name or password is INVALID!")
   }
   // const user1 = await userData.findOne({ eMail: req.body.eMail })
 
@@ -94,16 +158,18 @@ app.post('/users/login' , async (req , res)=>{
 
 })
 
-app.patch('/users/:id' ,async (req,res)=>{
+app.patch('/user_update/:id' ,async (req,res)=>{
 
- req.body.password = await bcrypt.hash(req.body.password, 8)
+ password = await bcrypt.hash(req.body.password, 8)
+ //console.log(password)
+ //password = req.body.password
  //req.body.dateLastUse = await Date.now
- let { password, dateLastUse } = req.body
- dateLastUse = await new Date()
+ //let { password, dateLastUse } = req.body
+ dateLastUse =new Date()
    
    //console.log(password)
   try{
-    const user = await userData.findByIdAndUpdate(req.params.id, {password,dateLastUse} , { new: true, runValidators: true})
+    const user = await userData.findByIdAndUpdate(req.params.id, {password:password,dateLastUse:dateLastUse} , { new: true, runValidators: true})
 
     if(!user){
       return res.status(404).send()
@@ -111,7 +177,7 @@ app.patch('/users/:id' ,async (req,res)=>{
     res.send(user)
 
   }catch(e){
-   res.status(400).send()
+   res.status(503).send()
 
   }
 })

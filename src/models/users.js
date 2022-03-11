@@ -3,9 +3,14 @@ const { default: isEmail } = require('validator/lib/isEmail')
 const bcrypt = require('bcryptjs')
 const userSchema = new mongoose.Schema({
 
+  Name:{
+    type:String
+  },
   userName:{
     type:String,
-    trim: true
+    index:true
+    
+     
   },
   eMail:{
     type:String,
@@ -19,8 +24,7 @@ const userSchema = new mongoose.Schema({
   },
 
   License_key:{
-    type:Number,
-    unique:true
+    type:Number
   },
  
 
@@ -28,15 +32,13 @@ const userSchema = new mongoose.Schema({
       type:String
   },
   dateInst:{
-    type: Date,
-    default:Date.now
+    type: Date
     
     //update:false
 
   },
   dateLastUse:{
-    type:Date,
-    default:Date.now
+    type:Date
     
   },
   password:{
@@ -44,6 +46,10 @@ const userSchema = new mongoose.Schema({
        required : true
 
 
+  },
+  Inactive:{
+    type:Boolean,
+    default:false
   }
 
 })
@@ -58,20 +64,22 @@ userSchema.methods.toJSON = function(){
   const userObject = user.toObject()
 
   delete userObject.password
+  delete userObject.Inactive
   return userObject
 }
 
 
 
 
- userSchema.pre('save',async function(next)
-{                     
-    const user = this                                                                                                                                         
-    user.password = await bcrypt.hash(user.password , 8)
+//  userSchema.pre('save',async function(next)
+// {                     
+//     const user = this 
+                                                                                                                                       
+//     user.password = await bcrypt.hash(user.password , 8)
 
-   next()
- }
- )
+//    next()
+//  }
+//  )
 
 //  userSchema.pre('findByIdAndUpdate',async function(next)
 // {                     
@@ -83,8 +91,8 @@ userSchema.methods.toJSON = function(){
 // )
 
 
- userSchema.statics.findByCredentials = async (eMail , password)=> {
-   const user1 = await userData.findOne({ eMail })
+ userSchema.statics.findByCredentials = async (userName , password)=> {
+   const user1 = await userData.findOne({ userName })
 
    if (!user1){
      throw new Error('Unable to login')
