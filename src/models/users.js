@@ -3,9 +3,7 @@ const { default: isEmail } = require('validator/lib/isEmail')
 const bcrypt = require('bcryptjs')
 const userSchema = new mongoose.Schema({
 
-  Name:{
-    type:String
-  },
+  
   userName:{
     type:String,
     index:true
@@ -65,6 +63,7 @@ userSchema.methods.toJSON = function(){
 
   delete userObject.password
   delete userObject.Inactive
+  delete userObject._id
   return userObject
 }
 

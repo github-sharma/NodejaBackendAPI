@@ -3,9 +3,26 @@ const bcrypt = require('bcryptjs')
 require('./db/mongoose.js')
 const date = require('date-and-time')
 const userData = require('./models/users.js')
+const transporter =require('./nodemailer.js')
+const { findOne } = require('./models/users.js')
+const { AggregationCursor } = require('mongodb')
+
+//   text:"testing1" 
+// }
+
+// transporter.sendMail(options, (err,info)=>{
+
+//   if(err)
+//   {console.log(err)
+//   return 
+  
+//   }
+//   console.log(info.response)
+// })
+
 const router = new express.Router()
 
-console.log(new Date())
+//console.log(new Date())
 
 // const mongoose = require('mongoose')
 // const { default: isEmail } = require('validator/lib/isEmail')
@@ -56,12 +73,12 @@ app.post('/user_install', async (req,res)=>{
   const user1 = await userData.findOne({ License_key:req.body.License_key })
   const user2 = await userData.findOne({ userName:req.body.userName })
   if(user1 && user1.Inactive === false)
-  { res.status(400).send("License Already Used!")}
+  { res.status(400).send("License Error!")}
   
   else if(user1 && user1.Inactive === true){
 
    if(user2){
-     res.status(400).send("UserName is not available!")
+     res.status(400).send("userName is not available!")
    }
    else{
      //req.body.dateInst = user1.dateInst
@@ -83,7 +100,10 @@ app.post('/user_install', async (req,res)=>{
      }
     }, (error,data)=>{
       if(error)
-      {res.status(503).send(error)}
+      {
+        res.status(503).send("Sorry,installation failed.Please try again.") 
+      
+      }
       else
       res.status(200).send(data)
 
@@ -100,7 +120,7 @@ app.post('/user_install', async (req,res)=>{
     else{
     await userData1.save().then(()=>{
       res.send(userData1)}).catch((e)=>{
-        res.status(400).send(e)})
+        res.status(503).send("Sorry,installation failed.Please try again.")})
 
   }}
   //res.send('testing')
@@ -111,7 +131,7 @@ app.post('/user_uninstall' , (req,res)=>{
   userData.findOneAndUpdate({License_key:req.body.License_key}, { $set: { Inactive: true }} , (error,data)=>
   {
    if(error)
-   {res.status(502).send(error)} 
+   {res.status(503).send(error)} 
    else 
    {res.send("Uninstallation Successful!")}
   }
@@ -121,19 +141,7 @@ app.post('/user_uninstall' , (req,res)=>{
 
 })
 
-app.get('/user_data/:id' , (req , res)=> {
-   
-  const _id = req.params.id   //access the id provided
-  userData.findById(_id).then((user)=>{
-    if(!user){
-      return res.status(404).send()
-    }
-    res.send(user)
-  }).catch((e)=>{
-    res.status(500).send()
-  })
 
-})
 
 app.post('/user_data/login' , async (req , res)=>{
 
@@ -145,9 +153,9 @@ app.post('/user_data/login' , async (req , res)=>{
 
   if(req.body.UUID === user.UUID){
   res.send(user)}
-  else{res.status(400).send("INVALID CREDENTIALS")}
+  else{res.status(400).send("INVALID CREDENTIALS!")}
   } catch (e) {
-    res.status(400).send("user_name or password is INVALID!")
+    res.status(400).send("userName or password is INVALID!")
   }
   // const user1 = await userData.findOne({ eMail: req.body.eMail })
 
@@ -158,28 +166,42 @@ app.post('/user_data/login' , async (req , res)=>{
 
 })
 
-app.patch('/user_update/:id' ,async (req,res)=>{
+app.get('/user_forgotpass' ,async (req,res)=>{
 
- password = await bcrypt.hash(req.body.password, 8)
- //console.log(password)
- //password = req.body.password
- //req.body.dateLastUse = await Date.now
- //let { password, dateLastUse } = req.body
- dateLastUse =new Date()
-   
-   //console.log(password)
-  try{
-    const user = await userData.findByIdAndUpdate(req.params.id, {password:password,dateLastUse:dateLastUse} , { new: true, runValidators: true})
+//  //password = await bcrypt.hash(req.body.password, 8)
+//  //console.log(password)
+//  //password = req.body.password
+//  //req.body.dateLastUse = await Date.now
+//  //let { password, dateLastUse } = req.body
+ const user1 = await userData.findOne({ userName:req.body.userName })
 
-    if(!user){
-      return res.status(404).send()
-    }
-    res.send(user)
-
-  }catch(e){
-   res.status(503).send()
-
+ if(user1)
+ {
+  const options = {
+    from:"sks7065@outlook.com",
+    to:user1.eMail,
+    subject:"OTP to reset your BWSIM password",
+    text: "Use this OTP and reset your password.  OTP:  "+ user1.password
   }
+  
+ await transporter.sendMail(options, (err,info)=>{
+  
+    if(err){
+   // console.log(err)
+    res.status(503).send("Sorry,Service Unavailable at this moment.")
+    return 
+    
+    }
+    res.status(200).send("Successful! Check your eMail")
+  })
+}
+else{
+  res.status(403).send("Invalid userName!")
+
+}
+
+
+
 })
 
 // app.post('/userDatas',(req,res)=>
@@ -197,6 +219,32 @@ app.patch('/user_update/:id' ,async (req,res)=>{
 //   })
 // }
 // )
+app.patch('/user_updatepass' , async (req,res)=>
+{
+    
+  user = await userData.findOne({userName:req.body.userName})
+  if(!user)
+  {
+    res.status(403).send("Invalid userName .")
+  }
+
+  else if(user.password === req.body.OTP)
+  {
+    const password1 = await bcrypt.hash(req.body.password , 8)
+    const date = new Date()
+
+    userData.findOneAndUpdate({userName:req.body.userName}, { $set: { password:password1 ,dateInst: date }} , (error,data)=>
+    {
+     if(error)
+     {res.status(503).send("Sorry,service unavailable at this moment")} 
+     else 
+     {res.send("Password updated successfully!")}
+    })
+  }
+  else
+  { res.status(403).send("Invalid OTP.")}
+}
+)
 
 
 const port = process.env.PORT || 3000
