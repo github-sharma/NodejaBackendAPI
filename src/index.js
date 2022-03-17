@@ -5,7 +5,8 @@ const date = require('date-and-time')
 const userData = require('./models/users.js')
 const transporter =require('./nodemailer.js')
 const { findOne } = require('./models/users.js')
-const { AggregationCursor } = require('mongodb')
+//const { AggregationCursor } = require('mongodb')
+const multer = require('multer')
 
 //   text:"testing1" 
 // }
@@ -75,7 +76,8 @@ app.post('/user_install', async (req,res)=>{
   if(user1 && user1.Inactive === false)
   { res.status(400).send("License Error!")}
   
-  else if(user1 && user1.Inactive === true){
+  else if(user1 && user1.Inactive === true)
+  {
 
    if(user2){
      res.status(400).send("userName is not available!")
@@ -87,8 +89,11 @@ app.post('/user_install', async (req,res)=>{
     // await userData1.save().then(()=>{
     //       res.send(userData1)}).catch((e)=>{
     //        res.status(400).send(e)})
-    userData.findOneAndUpdate({ License_key:userData1.License_key }, { $set: { 
-      Name: req.body.Name, 
+    const user5 = await userData.findOneAndUpdate(
+      { License_key:userData1.License_key }, 
+      { $set: 
+        { 
+    
       eMail:req.body.eMail,
       password:userData1.password,
       UUID:req.body.UUID,
@@ -97,20 +102,15 @@ app.post('/user_install', async (req,res)=>{
       License_key:user1.License_key,
       dateLastUse: new Date(),
       dateInst:user1.dateInst
-     }
-    }, (error,data)=>{
-      if(error)
-      {
-        res.status(503).send("Sorry,installation failed.Please try again.") 
-      
-      }
-      else
-      res.status(200).send(data)
-
-    })
-
-
-
+        }
+    },{new:true}
+    )
+    if(!user5){
+      res.status(503).send("Sorry,Try again later!")
+    }
+    else{
+      res.status(200).send(user5)
+    }
 
   }}
   else{
@@ -178,7 +178,7 @@ app.get('/user_forgotpass' ,async (req,res)=>{
  if(user1)
  {
   const options = {
-    from:"sks7065@outlook.com",
+    from:"bwsim5gt22@gigayasa.com",
     to:user1.eMail,
     subject:"OTP to reset your BWSIM password",
     text: "Use this OTP and reset your password.  OTP:  "+ user1.password
@@ -188,7 +188,8 @@ app.get('/user_forgotpass' ,async (req,res)=>{
   
     if(err){
    // console.log(err)
-    res.status(503).send("Sorry,Service Unavailable at this moment.")
+    res.status(503).send("Sorry,Service Unavailable at this moment."+err)
+    console.log(err)
     return 
     
     }
@@ -233,7 +234,7 @@ app.patch('/user_updatepass' , async (req,res)=>
     const password1 = await bcrypt.hash(req.body.password , 8)
     const date = new Date()
 
-    userData.findOneAndUpdate({userName:req.body.userName}, { $set: { password:password1 ,dateInst: date }} , (error,data)=>
+    userData.findOneAndUpdate({userName:req.body.userName}, { $set: { password:password1 ,dateLastUse: date }} , (error,data)=>
     {
      if(error)
      {res.status(503).send("Sorry,service unavailable at this moment")} 
@@ -245,6 +246,43 @@ app.patch('/user_updatepass' , async (req,res)=>
   { res.status(403).send("Invalid OTP.")}
 }
 )
+
+
+//sending results to users email
+
+const uploads = multer({})
+
+app.post('/send_results',uploads.single('Report'),async (req,res)=>{
+
+  const options = {
+    from:"bwsim5gt22@gigayasa.com",
+    to:req.body.eMail,
+    subject:"Your Simulation Results!",
+    attachments:{
+      filename:'Results.zip',
+      content:req.file.buffer
+    }
+    
+  }
+  
+ await transporter.sendMail(options, (err,info)=>{
+  
+    if(err){
+   // console.log(err)
+    res.status(503).send("Sorry,Service Unavailable at this moment.")
+    console.log(err)
+    return 
+    
+    }
+    res.status(200).send("Successful! Check your eMail.")
+  })
+}
+ 
+
+
+)
+
+
 
 
 const port = process.env.PORT || 3000
