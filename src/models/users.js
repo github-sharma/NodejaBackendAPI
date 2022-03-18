@@ -22,7 +22,11 @@ const userSchema = new mongoose.Schema({
   },
 
   License_key:{
-    type:Number
+    type:String,
+   max :20
+   // match:'/^.{0,20}$/'
+
+ 
   },
  
 
@@ -62,7 +66,6 @@ userSchema.methods.toJSON = function(){
   const userObject = user.toObject()
 
   delete userObject.password
-  delete userObject.Inactive
   delete userObject._id
   return userObject
 }

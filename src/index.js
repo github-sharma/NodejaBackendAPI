@@ -66,6 +66,7 @@ app.use(express.json())
 app.post('/user_install', async (req,res)=>{
 
   
+   if(req.body.License_key.length === 20){
 
    userData1 = userData(req.body)
    userData1.dateInst= new Date()
@@ -122,18 +123,25 @@ app.post('/user_install', async (req,res)=>{
       res.send(userData1)}).catch((e)=>{
         res.status(503).send("Sorry,installation failed.Please try again.")})
 
-  }}
+  }}}
+  else
+  {
+    res.status(403).send("License Error!")
+  }
   //res.send('testing')
 })
 
+
+
 app.post('/user_uninstall' , (req,res)=>{
 
-  userData.findOneAndUpdate({License_key:req.body.License_key}, { $set: { Inactive: true }} , (error,data)=>
+  const date = new Date()
+  userData.findOneAndUpdate({License_key:req.body.License_key}, { $set: { Inactive: true, dateLastUse:date }},{new:true} , (error,data)=>
   {
    if(error)
    {res.status(503).send(error)} 
    else 
-   {res.send("Uninstallation Successful!")}
+   {res.status(200).send(data)}
   }
   )
    
@@ -152,6 +160,7 @@ app.post('/user_data/login' , async (req , res)=>{
   const user = await userData.findByCredentials(req.body.userName , req.body.password)
 
   if(req.body.UUID === user.UUID){
+  user.dateLastUse=new Date()
   res.send(user)}
   else{res.status(400).send("INVALID CREDENTIALS!")}
   } catch (e) {
