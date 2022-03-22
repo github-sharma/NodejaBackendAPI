@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
   },
   eMail:{
     type:String,
-    required:true,
     trim:true,
     lowercase:true,
     validate(value){
@@ -45,8 +44,7 @@ const userSchema = new mongoose.Schema({
   },
   password:{
        type:String,
-       required : true
-
+      
 
   },
   Inactive:{
@@ -67,6 +65,7 @@ userSchema.methods.toJSON = function(){
 
   delete userObject.password
   delete userObject._id
+  delete userObject.__v
   return userObject
 }
 
