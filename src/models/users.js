@@ -38,23 +38,23 @@ const userSchema = new mongoose.Schema({
     //update:false
 
   },
-  dateLastUse:{
-    type:Date
-    
+  Inactive:{
+
+    type:Boolean,
+  
   },
+  
   password:{
        type:String,
       
 
   },
-  Inactive:{
-    type:Boolean,
-    default:false
+  Validity:{
+    type:Number,
+    
   }
 
 })
-
-
 
 
 
@@ -97,7 +97,7 @@ userSchema.methods.toJSON = function(){
 
    if (!user1){
      throw new Error('Unable to login')
-  }
+  }1
 
   const isMatch = await bcrypt.compare(password , user1.password)
 
@@ -111,7 +111,9 @@ userSchema.methods.toJSON = function(){
  
 
 
-const userData = mongoose.model('userData',userSchema) 
+const  userData = mongoose.model('userData',userSchema) 
+
 
 module.exports = userData
+
 
