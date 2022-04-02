@@ -1036,14 +1036,17 @@ app.post('/confirm_otp',async (req,res)=>{
 
 if(req.body.userName === undefined || req.body.eMail === undefined || req.body.OTP === undefined ){res.status(403).send("Error.")}
 else {
-  await userName.findOne({eMail:req.body.eMail}).then(async (data)=>{
-    const isMatch = await bcrypt.compare(req.body.password , data.password)
-   if(data===null){res.status(403).send("Invalid Credentials.")}
+  await userData.findOne({eMail:req.body.eMail}).then(async (data)=>{
+    
+    if(data===null){res.status(403).send("Invalid Credentials.")}
+   
+   
    else if(req.body.userName !=data.userName){res.status(403).send("Invalid Credentials.")}
+   else if(!(await bcrypt.compare(req.body.password , data.password))){res.status(403).send("Invalid OTP")}
    
   
 
-   else if(!isMatch){res.status(403).send("Invalid OTP")}
+  
    else{
      res.status(200).send("OTP matches")
    }
