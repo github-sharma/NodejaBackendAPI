@@ -1042,7 +1042,7 @@ else {
    
    
    else if(req.body.userName !=data.userName){res.status(403).send("Invalid Credentials.")}
-   else if(!(await bcrypt.compare(req.body.password , data.password))){res.status(403).send("Invalid OTP")}
+   else if(!(await bcrypt.compare(req.body.OTP , data.password))){res.status(403).send("Invalid OTP")}
    
   
 
