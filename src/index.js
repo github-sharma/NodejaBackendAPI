@@ -1008,7 +1008,7 @@ app.get('/user_forgotpass' ,async (req,res)=>{
       from:"bwsim5gt22@gigayasa.com",
       to:req.body.eMail,
       subject:"OTP to reset your BWSIM password",
-      text: "Use this OTP and reset your password.  OTP:  "+ data.password
+      text: "Use this OTP and reset your password.  OTP:  "+ data.password+ " Your userName is "+data.userName
     }
     
    await transporter.sendMail(options, (err,info)=>{
