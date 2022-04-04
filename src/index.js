@@ -224,145 +224,145 @@ app.post('/register_user',async (req,res)=>{
 })
 
 
-app.post('/user_install1',  async (req,res)=>{
+// app.post('/user_install1',  async (req,res)=>{
 
-  if(req.body.License_key === undefined || req.body.License_key.length !== 20)
-  {
-    res.status(403).send("License Error!")
-  }
+//   if(req.body.License_key === undefined || req.body.License_key.length !== 20)
+//   {
+//     res.status(403).send("License Error!")
+//   }
 
-  else if(req.body.userName === undefined || req.body.eMail === undefined || req.body.UUID === undefined || req.body.password === undefined )
-  {
-    res.status(403).send("Error!")
-  }
-else
-{
+//   else if(req.body.userName === undefined || req.body.eMail === undefined || req.body.UUID === undefined || req.body.password === undefined )
+//   {
+//     res.status(403).send("Error!")
+//   }
+// else
+// {
   
- await LicenseData.findOne({License_key:req.body.License_key}).then(async (data)=>{
+//  await LicenseData.findOne({License_key:req.body.License_key}).then(async (data)=>{
   
-  if(data===null ){res.status(403).send("License Error.")}
-  else if(!data.Allocated){res.status(403).send("License Error.")}
-  else if(data.Inactive!= undefined && !data.Inactive){res.status(403).send("License Error.")}
-  else if(data.Inactive && date.subtract(new Date(),data.dateInst).toDays()>data.Days){res.status(403).send("License Error.")}
+//   if(data===null ){res.status(403).send("License Error.")}
+//   else if(!data.Allocated){res.status(403).send("License Error.")}
+//   else if(data.Inactive!= undefined && !data.Inactive){res.status(403).send("License Error.")}
+//   else if(data.Inactive && date.subtract(new Date(),data.dateInst).toDays()>data.Days){res.status(403).send("License Error.")}
 
-  else if(data.Inactive === true ){
+//   else if(data.Inactive === true ){
 
-    await LicenseData.findOneAndUpdate(
-    {License_key:req.body.License_key }, 
-    {$set: 
-    { 
-       Inactive:false,
-       dateLastUse:new Date()
-    }
-  },
-  {new:true}
+//     await LicenseData.findOneAndUpdate(
+//     {License_key:req.body.License_key }, 
+//     {$set: 
+//     { 
+//        Inactive:false,
+//        dateLastUse:new Date()
+//     }
+//   },
+//   {new:true}
 
-).then(async (data)=>{
-  await userData.findOneAndUpdate(
-    {userName:req.body.userName},
-    { $set: 
-      { 
-         UUID:req.body.UUID,
-         Inactive:false,
-         dateInst:data.dateInst,
-         dateLastUse:new Date(),
-         License_key:data.Lecense_key,
-         Validity:data.Validity
+// ).then(async (data)=>{
+//   await userData.findOneAndUpdate(
+//     {userName:req.body.userName},
+//     { $set: 
+//       { 
+//          UUID:req.body.UUID,
+//          Inactive:false,
+//          dateInst:data.dateInst,
+//          dateLastUse:new Date(),
+//          License_key:data.Lecense_key,
+//          Validity:data.Validity
 
 
 
          
-      }
-    },
-    {new:true}
+//       }
+//     },
+//     {new:true}
 
-    ).then((data2)=>{
-      res.send({
-        License_key:data2.Lecense_key,
-        dateInst:data2.dateInst,
-        Validity:data2.Validity,
-        Inactive:false,
-        userName:data2.userName,
-        eMail:data2.eMail,
-        UUID:data2.UUID,
-        dateLastUse:data2.dateLastUse
-
-
-
-      })
-
-    }).catch((e)=>{
+//     ).then((data2)=>{
+//       res.send({
+//         License_key:data2.Lecense_key,
+//         dateInst:data2.dateInst,
+//         Validity:data2.Validity,
+//         Inactive:false,
+//         userName:data2.userName,
+//         eMail:data2.eMail,
+//         UUID:data2.UUID,
+//         dateLastUse:data2.dateLastUse
 
 
 
-      res.status(503).send("Sorry,Server Unvailable.")
+//       })
+
+//     }).catch((e)=>{
 
 
 
-  })
+//       res.status(503).send("Sorry,Server Unvailable.")
 
-}).catch((e)=>{res.status(503).send("Sorry,Server Unavailable")
 
-})
+
+//   })
+
+// }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable")
+
+// })
 
 
     
-}
+// }
 
-  else
-  {
-    await LicenseData.findOneAndUpdate
-    (
-      { License_key:req.body.License_key }, 
-      { $set: 
-        { 
-           Inactive:false,
-           dateInst:new Date(),
-           dateLastUse:new Date()
-        }
-      },
-      {new:true}
+//   else
+//   {
+//     await LicenseData.findOneAndUpdate
+//     (
+//       { License_key:req.body.License_key }, 
+//       { $set: 
+//         { 
+//            Inactive:false,
+//            dateInst:new Date(),
+//            dateLastUse:new Date()
+//         }
+//       },
+//       {new:true}
    
-    ).then(async (data)=>{
-      await userData.findOneAndUpdate(
-        {userName:req.body.userName},
-        { $set: 
-          { 
-            License_key:data.Lecense_key,
-            dateInst:data.dateInst,
-            Validity:data.Validity,
-            Inactive:false,
-            userName:data2.userName,
-            eMail:data2.eMail,
-            UUID:data2.UUID,
-            dateLastUse:data2.dateLastUse
-          }
-        },
-        {new:true}
+//     ).then(async (data)=>{
+//       await userData.findOneAndUpdate(
+//         {userName:req.body.userName},
+//         { $set: 
+//           { 
+//             License_key:data.Lecense_key,
+//             dateInst:data.dateInst,
+//             Validity:data.Validity,
+//             Inactive:false,
+//             userName:data2.userName,
+//             eMail:data2.eMail,
+//             UUID:data2.UUID,
+//             dateLastUse:data2.dateLastUse
+//           }
+//         },
+//         {new:true}
 
-        ).then((data2)=>{
-          res.send({
-            License_key:data2.Lecense_key,
-            dateInst:data2.dateInst,
-            Validity:data2.Validity,
-            Inactive:false,
-            userName:data2.userName,
-            eMail:data2.eMail,
-            UUID:data2.UUID,
-            dateLastUse:data2.dateLastUse
+//         ).then((data2)=>{
+//           res.send({
+//             License_key:data2.Lecense_key,
+//             dateInst:data2.dateInst,
+//             Validity:data2.Validity,
+//             Inactive:false,
+//             userName:data2.userName,
+//             eMail:data2.eMail,
+//             UUID:data2.UUID,
+//             dateLastUse:data2.dateLastUse
 
 
 
-          })
+//           })
 
-        }).catch((e)=>{res.status(503).send("Sorry,Server Unvailable.")})
+//         }).catch((e)=>{res.status(503).send("Sorry,Server Unvailable.")})
 
-    }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable")
+//     }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable")
 
-    })
+//     })
    
     
-  }  
+//   }  
 
 
   
@@ -370,15 +370,15 @@ else
 
 
 
-}).catch((e)=>{
-  res.status(503).send("Sorry.Server Unavailable.")
-})
+// }).catch((e)=>{
+//   res.status(503).send("Sorry.Server Unavailable.")
+// })
 
-}
+// }
 
 
 
-})
+// })
 
 app.post('/user_install',async(req,res)=>{
 
@@ -482,7 +482,7 @@ app.post('/user_install',async(req,res)=>{
       // } 
       
 else if(data.Inactive=== true){
-  const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster0.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+  const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster1.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
   const client = await MongoClient.connect(uri)
   const LicenseData1 = client.db("myFirstDatabase").collection("licensekeydatas")
@@ -575,7 +575,7 @@ finally{
 
 else
 {
-  const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster0.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+  const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster1.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
   const client = await MongoClient.connect(uri)
   const LicenseData1 = client.db("myFirstDatabase").collection("licensekeydatas")
@@ -671,159 +671,159 @@ finally{
 
   
 
-app.post('/userinstall2', async (req,res)=>{
- // console.log(req.body.userName)
+// app.post('/userinstall2', async (req,res)=>{
+//  // console.log(req.body.userName)
   
-  if(req.body.License_key === undefined || req.body.License_key.length !== 20)
-  {
-    res.status(403).send("License Error!")
-  }
-  else if(req.body.userName === undefined || req.body.eMail === undefined || req.body.UUID === undefined || req.body.password === undefined )
-  {
-    res.status(403).send("Error!")
-  }
- else
-  {
-   userData1 = userData(req.body)
-   userData1.dateInst= new Date()
-   userData1.dateLastUse = new Date()
-   userData1.password = await bcrypt.hash(userData1.password , 8)
-   const user1 = await userData.findOne({ License_key:req.body.License_key })
-   //const user2 = await userData.findOne({ userName:req.body.userName })
-   if(user1 && user1.Inactive === false)
-     { 
-       res.status(400).send("License Error!")
-     }
+//   if(req.body.License_key === undefined || req.body.License_key.length !== 20)
+//   {
+//     res.status(403).send("License Error!")
+//   }
+//   else if(req.body.userName === undefined || req.body.eMail === undefined || req.body.UUID === undefined || req.body.password === undefined )
+//   {
+//     res.status(403).send("Error!")
+//   }
+//  else
+//   {
+//    userData1 = userData(req.body)
+//    userData1.dateInst= new Date()
+//    userData1.dateLastUse = new Date()
+//    userData1.password = await bcrypt.hash(userData1.password , 8)
+//    const user1 = await userData.findOne({ License_key:req.body.License_key })
+//    //const user2 = await userData.findOne({ userName:req.body.userName })
+//    if(user1 && user1.Inactive === false)
+//      { 
+//        res.status(400).send("License Error!")
+//      }
   
-   else if(user1 && user1.Inactive === true)
-    {
+//    else if(user1 && user1.Inactive === true)
+//     {
 
-        const user10 =await userData.findOne({License_key:req.body.License_key})
+//         const user10 =await userData.findOne({License_key:req.body.License_key})
 
 
-       //  if(user2){
-       //    res.status(400).send("userName is not available!")
-       //  }
-       //  else{
-       //req.body.dateInst = user1.dateInst
-       // userData1.dateInst = user1.dateInst
-       // await userData.deleteOne({ License_key:req.body.License_key })
-        // await userData1.save().then(()=>{
-        //       res.send(userData1)}).catch((e)=>{
-         //        res.status(400).send(e)})
-      if(user10.userName !== req.body.userName)
-      {
-         const user6 = await userData.findOneAndDelete({userName:req.body.userName})
-       if(user6)
-       {
-         const user5 = await userData.findOneAndUpdate
-         (
-           { License_key:req.body.License_key }, 
-           { $set: 
-             { 
+//        //  if(user2){
+//        //    res.status(400).send("userName is not available!")
+//        //  }
+//        //  else{
+//        //req.body.dateInst = user1.dateInst
+//        // userData1.dateInst = user1.dateInst
+//        // await userData.deleteOne({ License_key:req.body.License_key })
+//         // await userData1.save().then(()=>{
+//         //       res.send(userData1)}).catch((e)=>{
+//          //        res.status(400).send(e)})
+//       if(user10.userName !== req.body.userName)
+//       {
+//          const user6 = await userData.findOneAndDelete({userName:req.body.userName})
+//        if(user6)
+//        {
+//          const user5 = await userData.findOneAndUpdate
+//          (
+//            { License_key:req.body.License_key }, 
+//            { $set: 
+//              { 
      
-               eMail:req.body.eMail,
-                password:userData1.password,
-                UUID:req.body.UUID,
-                userName:req.body.userName,
-                Inactive:false,
-               License_key:user1.License_key,
-                dateLastUse: new Date(),
-                dateInst:user1.dateInst
-             }
-           },
-           {new:true}
-          )
+//                eMail:req.body.eMail,
+//                 password:userData1.password,
+//                 UUID:req.body.UUID,
+//                 userName:req.body.userName,
+//                 Inactive:false,
+//                License_key:user1.License_key,
+//                 dateLastUse: new Date(),
+//                 dateInst:user1.dateInst
+//              }
+//            },
+//            {new:true}
+//           )
    
-         if(!user5)
-           {
-              res.status(503).send("Sorry,Please try again.")
-           }
-          else
-           {
-              res.status(200).send(user5)
-           }
-       }
+//          if(!user5)
+//            {
+//               res.status(503).send("Sorry,Please try again.")
+//            }
+//           else
+//            {
+//               res.status(200).send(user5)
+//            }
+//        }
 
-       else 
-       {
-          (res.status(503).send("Sorry,Please try again."))
-       }
-      } 
-      else
-      {
-        const user5 = await userData.findOneAndUpdate
-         (
-           { License_key:userData1.License_key }, 
-           { $set: 
-             { 
+//        else 
+//        {
+//           (res.status(503).send("Sorry,Please try again."))
+//        }
+//       } 
+//       else
+//       {
+//         const user5 = await userData.findOneAndUpdate
+//          (
+//            { License_key:userData1.License_key }, 
+//            { $set: 
+//              { 
      
-               eMail:req.body.eMail,
-                password:userData1.password,
-                UUID:req.body.UUID,
-                Inactive:false,
-                dateLastUse: new Date(),
-                dateInst:user1.dateInst
-             }
-           },
-           {new:true}
-          )
-          if(!user5)
-          {
-             res.status(503).send("Sorry,Please try again.")
-          }
-         else
-          {
-             res.status(200).send(user5)
-          }
+//                eMail:req.body.eMail,
+//                 password:userData1.password,
+//                 UUID:req.body.UUID,
+//                 Inactive:false,
+//                 dateLastUse: new Date(),
+//                 dateInst:user1.dateInst
+//              }
+//            },
+//            {new:true}
+//           )
+//           if(!user5)
+//           {
+//              res.status(503).send("Sorry,Please try again.")
+//           }
+//          else
+//           {
+//              res.status(200).send(user5)
+//           }
    
 
-      }
-    }
+//       }
+//     }
     
-   else
-     {
-          //  if(user2){
-          //   res.status(400).send("userName is not available!")
-          // }
-          // else{
-          // await userData1.save().then(()=>{
-          //   res.send(userData1)}).catch((e)=>{
-         //     res.status(503).send("Sorry,installation failed.Please try again.")})
-          const user =await userData.findOneAndUpdate
-            (
-               {userName:req.body.userName},
-               {$set:
-                  {
+//    else
+//      {
+//           //  if(user2){
+//           //   res.status(400).send("userName is not available!")
+//           // }
+//           // else{
+//           // await userData1.save().then(()=>{
+//           //   res.send(userData1)}).catch((e)=>{
+//          //     res.status(503).send("Sorry,installation failed.Please try again.")})
+//           const user =await userData.findOneAndUpdate
+//             (
+//                {userName:req.body.userName},
+//                {$set:
+//                   {
                     
      
-                      eMail:req.body.eMail,
-                       password:userData1.password,
-                       UUID:req.body.UUID,
-                       Inactive:false,
-                      License_key:req.body.License_key,
-                       dateLastUse: new Date(),
-                       dateInst:new Date()
+//                       eMail:req.body.eMail,
+//                        password:userData1.password,
+//                        UUID:req.body.UUID,
+//                        Inactive:false,
+//                       License_key:req.body.License_key,
+//                        dateLastUse: new Date(),
+//                        dateInst:new Date()
                     
-                  }
-               },  
-               {new:true}
-            )
-           if(!user)
-            {
-                res.status(503).send("Sorry,Please Try Again.")
-            }  
-          else
-            {
-                res.status(200).send(user)
-            }
+//                   }
+//                },  
+//                {new:true}
+//             )
+//            if(!user)
+//             {
+//                 res.status(503).send("Sorry,Please Try Again.")
+//             }  
+//           else
+//             {
+//                 res.status(200).send(user)
+//             }
 
 
-      }
-  }
+//       }
+//   }
  
-  //res.send('testing')
-})
+//   //res.send('testing')
+// })
 
 
 
@@ -840,7 +840,7 @@ app.post('/user_uninstall' ,async (req,res)=>{
         else{
 
 
-          const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster0.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+          const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster1.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
           const client = await MongoClient.connect(uri)
           const LicenseData1 = client.db("myFirstDatabase").collection("licensekeydatas")
@@ -1043,7 +1043,7 @@ else {
    
    else if(req.body.userName !=data.userName){res.status(403).send("Invalid Credentials.")}
   
-   else if(!(req.body.OTP===data.password)){res.status(403).send("Invalid OTP")}
+   else if(!(req.body.OTP===data.password)){res.status(403).send("Invalid OTP.")}
    
   
 
