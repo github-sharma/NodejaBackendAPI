@@ -128,7 +128,12 @@ app.post('/UpdateLicenseFile', async (req,res)=>{
   if(req.body.Allocated===undefined || req.body.Validity===undefined || req.body.License_key===undefined ){res.status(403).send("Error")}
   else if(req.body.License_key.length !=20){res.status(403).send("Invalid License_key")}
   else{
-   await LicenseData.findOneAndUpdate({License_key:req.body.Lecense_key},
+    await LicenseData.findOne({License_key:req.body.License_key}).then((data)=>{
+      if(data===null){res.status(403).send("License Error")}
+    }).catch((e)=>{
+      res.status(503).send("Sorry,Server Unavailable.")
+    })
+   await LicenseData.findOneAndUpdate({License_key:req.body.License_key},
       {$set:{
         Allocated:req.body.Allocated,
         Validity:req.body.Validity
