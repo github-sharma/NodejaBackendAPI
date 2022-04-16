@@ -129,7 +129,7 @@ app.post('/UpdateLicenseFile', async (req,res)=>{
   else if(req.body.License_key.length !=20){res.status(403).send("Invalid License_key")}
   else{
     await LicenseData.findOne({License_key:req.body.License_key}).then((data)=>{
-      if(data===null){res.status(403).send("License Error")}
+      if(data===null){res.status(403).send("License Error!")}
     }).catch((e)=>{
       res.status(503).send("Sorry,Server Unavailable.")
     })
@@ -984,6 +984,7 @@ app.post('/user_data/login' , async (req , res)=>{
        else{
          if(req.body.UUID!=data.UUID){res.status(403).send("Invalid Credentials.")}
          else{
+           data.dateLastUse = new Date()
            res.status(200).send(data)
          }
        }
