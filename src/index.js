@@ -984,8 +984,21 @@ app.post('/user_data/login' , async (req , res)=>{
        else{
          if(req.body.UUID!=data.UUID){res.status(403).send("Invalid Credentials.")}
          else{
-           data.dateLastUse = new Date()
-           res.status(200).send(data)
+           //console.log(data.dateLastUse)
+          // data.dateLastUse = new Date()
+           //console.log(data.dateLastUse)
+           res.status(200).send(
+           {
+            License_key:data.License_key,
+            dateInst:data.dateInst,
+            Validity:data.Validity,
+            Inactive:false,
+            userName:data.userName,
+            eMail:data.eMail,
+            UUID:data.UUID,
+            dateLastUse:new Date()
+           }
+           )
          }
        }
      }
