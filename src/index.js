@@ -1112,46 +1112,208 @@ app.patch('/user_updatepass' , async (req,res)=>
 
 
 //sending results to users email
+// sending issue/suggestion 
+// const uploadss = multer({})
+// app.post('/send_results',uploadss.single('Report'),async (req,res)=>{
 
-
+//   if(req.body.email === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
+//   else{
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+//     to:"support@gigayasa.com",
+//     subject:"Simulation Results!"
+//     // text:""+req.body.message,
+//   //   attachments:{
+//   //   filename:report.zip,
+//   //   content:req.file.buffer
+//   // }
+//   }
+//   await transporter.sendMail(options, (err,info)=>{
+//   if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }}
+// )
 const uploads = multer({})
+
 app.post('/send_results',uploads.single('Report'),async (req,res)=>{
 
-  if(req.body.eMail === undefined || req.file === undefined ){res.status(403).send("Error!")}
+  if(req.body.eMail === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
   else{
-
+  
+  
   const options = {
     from:"bwsim5gt22@gigayasa.com",
     to:req.body.eMail,
-    subject:"Your Simulation Results!",
+    subject:"Your Simulation Results",
+    html:"Greetings," + "<br>"+req.body.message,
+    // text:req.body.message,    
     attachments:{
-      filename:'Results.zip',
-      content:req.file.buffer
-    }
-    
+    filename: "Report.zip",
+    content:req.file.buffer
   }
-  
- await transporter.sendMail(options, (err,info)=>{
-  
-    if(err){
-   // console.log(err)
+  }
+  await transporter.sendMail(options, (err,info)=>{
+  if(err){
     res.status(503).send("Sorry,Service Unavailable at this moment.")
     console.log(err)
     return 
-    
     }
     res.status(200).send("Successful! Check your eMail.")
   })
-}
-}
- 
+}}
+)
 
 
+const uploadsss = multer({})
+
+app.post('/send_issue_pic',uploadsss.single('Attachment'),async (req,res)=>{
+
+  if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.file === undefined || req.body.filetype === undefined ){res.status(403).send("Error!")}
+  else{
+  filename1 = "" 
+  if( req.body.filetype === "jpg" ){
+    filename1 = "Image.jpg"
+  }
+  else if( req.body.filetype === "jpeg" ){
+    filename1 = "Image.jpeg"
+  }
+  else if(req.body.filetype === "png")
+  {
+    filename1 = "Image.png"
+  }
+  else if(req.body.filetype === "svg")
+  {
+    filename1 = "Image.svg"
+  }
+  else if(req.body.filetype === "eps")
+  {
+    filename1 = "Image.eps"
+  }
+  else if(req.body.filetype === "bmp")
+  {
+    filename1 = "Image.bmp"
+  }
+  const options = {
+    from:"bwsim5gt22@gigayasa.com",
+    to:"support@gigayasa.com",
+    subject:req.body.subject,
+    // text:"username:   "+"\n"+req.body.username +"\n"+
+    //      "Email:         "+"\n"+req.body.Email+"\n"+
+    //      "DateOfReport:     "+"\n"+new Date() +"\n"+
+    //      "Type:             "+"\n"+req.body.Type +"\n"+
+    //      "Description:       "+"\n"+req.body.Description,
+         html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",     
+    
+    attachments:{
+    filename: filename1,
+    content:req.file.buffer
+  }
+  }
+  await transporter.sendMail(options, (err,info)=>{
+  if(err){
+    res.status(503).send("Sorry,Service Unavailable at this moment.")
+    console.log(err)
+    return 
+    }
+    res.status(200).send("Successful! Check your eMail.")
+  })
+}}
+)
+
+app.post('/send_issue',async (req,res)=>{
+
+  if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined ){res.status(403).send("Error!")}
+  else{
+  const options = {
+    from:"bwsim5gt22@gigayasa.com",
+    to:"support@gigayasa.com",
+    subject:req.body.subject,
+    // text:"<b>username:</b>   "+"\n"+req.body.username +"\n"+
+    //      "Email:         "+"\n"+req.body.Email+"\n"+
+    //      "DateOfReport:     "+"\n"+new Date() +"\n"+
+    //      "Type:             "+"\n"+req.body.Type +"\n"+
+    //      "Description:       "+"\n"+req.body.Descrition,
+    // 
+    html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.descrition+""
+    }
+   await transporter.sendMail(options, (err,info)=>{
+    if(err){
+    res.status(503).send("Sorry,Service Unavailable at this moment.")
+    console.log(err)
+    return 
+    }
+    res.status(200).send("Successful! Check your eMail.")
+  })
+}}
 )
 
 
 
 
+
+
+
+// app.post('/send_suggestion',async (req,res)=>{
+
+//   if(req.body.Email === undefined ){res.status(403).send("Error!")}
+//   else{
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+//     to:"support@gigayasa.com",
+//     subject:req.body.subject,
+//     // text:"<b>username:</b>   "+"\n"+req.body.username +"\n"+
+//     //      "Email:         "+"\n"+req.body.Email+"\n"+
+//     //      "DateOfReport:     "+"\n"+new Date() +"\n"+
+//     //      "Type:             "+"\n"+req.body.Type +"\n"+
+//     //      "Description:       "+"\n"+req.body.Descrition,
+//     // 
+//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.Email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.Type+"<br><b>Description :</b>"+req.body.Descrition+""
+//     }
+//    await transporter.sendMail(options, (err,info)=>{
+//     if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }}
+// )
+
+
+ 
+// app.post('/send_results',uploads.single('Report'),async (req,res)=>{
+
+//   if(req.body.eMail === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
+//   else{
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+//     to:req.body.eMail,
+//     subject:"Your Simulation Results!",
+
+//     text:req.body.message,
+//     attachments:{
+//       filename:'Report.zip',
+//       content:req.file.buffer
+//     }
+//   }
+//   await transporter.sendMail(options, (err,info)=>{
+  
+//     if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }
+// })
+
 const port = process.env.PORT || 3000
 
- app.listen(port,()=>{console.log('server is up and running' + port)})
+app.listen(port,()=>{console.log('server is up and running' + port)})
