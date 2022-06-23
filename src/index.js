@@ -1138,6 +1138,9 @@ app.patch('/user_updatepass' , async (req,res)=>
 //   })
 // }}
 // )
+
+
+
 const uploads = multer({})
 
 app.post('/send_results',uploads.single('Report'),async (req,res)=>{
@@ -1148,6 +1151,10 @@ app.post('/send_results',uploads.single('Report'),async (req,res)=>{
   
   const options = {
     from:"bwsim5gt22@gigayasa.com",
+
+    // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
     to:req.body.eMail,
     subject:"Your Simulation Results",
     html:"Greetings," + "<br>"+req.body.message,
@@ -1169,51 +1176,95 @@ app.post('/send_results',uploads.single('Report'),async (req,res)=>{
 )
 
 
-const uploadsss = multer({})
+// Sending issue suggestion with picture 
 
-app.post('/send_issue_pic',uploadsss.single('Attachment'),async (req,res)=>{
 
-  if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.file === undefined || req.body.filetype === undefined ){res.status(403).send("Error!")}
+const uploadss = multer({})
+
+app.post('/send_issue_pic',uploadss.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 3 }]),async (req,res)=>{
+
+  if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.files['gallery'] === undefined )
+  {res.status(403).send("Error!")}
   else{
-  filename1 = "" 
-  if( req.body.filetype === "jpg" ){
-    filename1 = "Image.jpg"
-  }
-  else if( req.body.filetype === "jpeg" ){
-    filename1 = "Image.jpeg"
-  }
-  else if(req.body.filetype === "png")
-  {
-    filename1 = "Image.png"
-  }
-  else if(req.body.filetype === "svg")
-  {
-    filename1 = "Image.svg"
-  }
-  else if(req.body.filetype === "eps")
-  {
-    filename1 = "Image.eps"
-  }
-  else if(req.body.filetype === "bmp")
-  {
-    filename1 = "Image.bmp"
-  }
-  const options = {
+    // console.log(req.files['gallery'][0].type)
+  
+  var options = {}
+  if(req.files['gallery'].length === 1){
+  options = {
     from:"bwsim5gt22@gigayasa.com",
+
+    // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
     to:"support@gigayasa.com",
     subject:req.body.subject,
-    // text:"username:   "+"\n"+req.body.username +"\n"+
-    //      "Email:         "+"\n"+req.body.Email+"\n"+
-    //      "DateOfReport:     "+"\n"+new Date() +"\n"+
-    //      "Type:             "+"\n"+req.body.Type +"\n"+
-    //      "Description:       "+"\n"+req.body.Description,
-         html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",     
+    html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
+    // text:req.body.message, 
     
-    attachments:{
-    filename: filename1,
-    content:req.file.buffer
-  }
-  }
+    //  req.files['avatar'][0] -> File
+    //  req.files['gallery'] -> Array
+    attachments:[{
+    // filename:"att.jpg",
+    content:req.files['gallery'][0].buffer
+  }]
+}
+}
+
+if(req.files['gallery'].length === 2){
+options = {
+  from:"bwsim5gt22@gigayasa.com",
+
+  // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
+  to:"support@gigayasa.com",
+  subject:req.body.subject,
+  html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
+  // text:req.body.message, 
+  
+  //  req.files['avatar'][0] -> File
+  //  req.files['gallery'] -> Array
+  attachments:[{
+  // filename:"att.jpg",
+  content:req.files['gallery'][0].buffer
+},
+{
+  content:req.files['gallery'][1].buffer
+}]
+}
+}
+
+
+if(req.files['gallery'].length === 3){
+options = {
+  from:"bwsim5gt22@gigayasa.com",
+
+  // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
+  to:"support@gigayasa.com",
+  subject:req.body.subject,
+  html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
+  // text:req.body.message, 
+  
+  //  req.files['avatar'][0] -> File
+  //  req.files['gallery'] -> Array
+  attachments:[{
+  // filename:"att.jpg",
+  content:req.files['gallery'][0].buffer
+},
+{
+  content:req.files['gallery'][1].buffer
+},
+
+{
+  content:req.files['gallery'][2].buffer
+}]
+}
+}
+
+
+
   await transporter.sendMail(options, (err,info)=>{
   if(err){
     res.status(503).send("Sorry,Service Unavailable at this moment.")
@@ -1224,6 +1275,197 @@ app.post('/send_issue_pic',uploadsss.single('Attachment'),async (req,res)=>{
   })
 }}
 )
+
+
+
+
+
+
+
+
+
+
+// const uploadss = multer({})
+
+// app.post('/send_issue_pic',uploadss.single('Attachment'),async (req,res)=>{
+
+//   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.file === undefined )
+//   {res.status(403).send("Error!")}
+//   else{
+  
+  
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+
+//     // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
+//     to:"support@gigayasa.com",
+//     subject:req.body.subject,
+//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
+//     // text:req.body.message,    
+//     attachments:{
+//     filename: req.file.originalname,
+//     content:req.file.buffer
+//   }
+//   }
+//   await transporter.sendMail(options, (err,info)=>{
+//   if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }}
+// )
+
+
+
+
+
+
+// const uploads = multer({})
+
+// app.post('/send_results',uploads.single('Report'),async (req,res)=>{
+
+//   if(req.body.eMail === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
+//   else{
+  
+  
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+
+//     // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
+//     to:req.body.eMail,
+//     subject:"Your Simulation Results",
+//     html:"Greetings," + "<br>"+req.body.message,
+//     // text:req.body.message,    
+//     attachments:{
+//     filename: "Report.zip",
+//     content:req.file.buffer
+//   }
+//   }
+//   await transporter.sendMail(options, (err,info)=>{
+//   if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }}
+// )
+
+
+
+
+
+// const uploadss = multer({})
+
+// app.post('/send_issue_pic',uploadss.single('Attachment'),async (req,res)=>{
+
+//   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.file === undefined )
+//   {res.status(403).send("Error!")}
+//   else{
+  
+  
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+
+//     // to:req.body.eMail1 + ","+req.body.eMail2,
+
+
+//     to:"support@gigayasa.com",
+//     subject:req.body.subject,
+//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
+//     // text:req.body.message,    
+//     attachments:{
+//     filename: req.file.originalname,
+//     content:req.file.buffer
+//   }
+//   }
+//   await transporter.sendMail(options, (err,info)=>{
+//   if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }}
+// )
+
+
+// const uploadsss = multer({ dest: 'uploads/' })
+
+// // app.post('/send_issue_pic',uploadsss.fields([{ name: 'attachment', maxCount: 1 }]),async (req,res)=>{
+//   app.post('/send_issue_pic',uploadsss.single('attachment'),async (req,res)=>{  
+
+//   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.files === undefined ){res.status(403).send("Error!")}
+//   else{
+
+//   // filename1 = "" 
+//   // if( req.body.filetype === "jpg" ){
+//   //   filename1 = "Image.jpg"
+//   // }
+//   // else if( req.body.filetype === "jpeg" ){
+//   //   filename1 = "Image.jpeg"
+//   // }
+//   // else if(req.body.filetype === "png")
+//   // {
+//   //   filename1 = "Image.png"
+//   // }
+//   // else if(req.body.filetype === "svg")
+//   // {
+//   //   filename1 = "Image.svg"
+//   // }
+//   // else if(req.body.filetype === "eps")
+//   // {
+//   //   filename1 = "Image.eps"
+//   // }
+//   // else if(req.body.filetype === "bmp")
+//   // {
+//   //   filename1 = "Image.bmp"
+//   // }
+
+//   const options = {
+//     from:"bwsim5gt22@gigayasa.com",
+//     to:"support@gigayasa.com",
+//     subject:req.body.subject,
+
+//     // text:"username:   "+"\n"+req.body.username +"\n"+
+//     //      "Email:         "+"\n"+req.body.Email+"\n"+
+//     //      "DateOfReport:     "+"\n"+new Date() +"\n"+
+//     //      "Type:             "+"\n"+req.body.Type +"\n"+
+//     //      "Description:       "+"\n"+req.body.Description,
+
+//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",     
+    
+  
+//   //   attachments:[{
+//   //   // filename: "1",
+//   //   content:req.files['Attachment'][0].buffer
+//   // }
+//   // ,
+//   // {
+//   //   content:req.files['Attachment'][1].buffer
+//   // }
+// // ]
+
+//   }
+//   await transporter.sendMail(options, (err,info)=>{
+//   if(err){
+//     res.status(503).send("Sorry,Service Unavailable at this moment.")
+//     console.log(err)
+//     return 
+//     }
+//     res.status(200).send("Successful! Check your eMail.")
+//   })
+// }}
+// )
 
 app.post('/send_issue',async (req,res)=>{
 
