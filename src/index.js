@@ -12,88 +12,12 @@ const multer = require('multer')
 const { default: mongoose } = require('mongoose')
 
 
-  //text:"testing1"
-  // const LicenseData1 = LicenseData(
-  //   {
-  //     License_key:'kriggykriggykriggykr',
-  //     Allocated:true,
-  //     Validity:180
-
-  //   }
-  
- // console.log(LicenseData1)
-
- 
-
-  //  LicenseData1.save().then(()=>{
-  //    console.log("Congrats!Registration Successful.")}).catch((e)=>{
-  //      console.log("Sorry,registration failed.Please try again.")})
-
-//  LicenseData.findOne({License_key:'qwertyiopqwertyuiop'}).then((data)=>{
-//    console.log(data)
-//  }).catch((e)=>{
-//    console.log(e)
-//  })
-
-//  const data =  LicenseData.findOne({License_key:'12345678901234567890'})
-//  console.log(data.License_key)
-
 const date1 = new Date()
- const date2 = new Date()
-
- //console.log(date1)
- //console.log(date2)
- //console.log(date1-date2)
+const date2 = new Date()
 
 
- 
-
-// transporter.sendMail(options, (err,info)=>{
-
-//   if(err)
-//   {console.log(err)
-//   return 
-  
-//   }
-//   console.log(info.response)
-// })
 
 const router = new express.Router()
-
-//console.log(new Date())
-
-// const mongoose = require('mongoose')
-// const { default: isEmail } = require('validator/lib/isEmail')
-
-// const userData = mongoose.model('userDatas', {
-
-
-//   name:{
-//     type:String,
-//     required:true,
-//     trim: true
-//   },
-//   eMail:{
-//     type:String,
-//     required:true,
-//     trim:true,
-//     lowercase:true,
-//     validate(value){
-//       if (!isEmail(value))
-//       { throw new error('email is inValid')}
-//     }
-//   },
-//   DoL:{
-//     type: Date,
-//     required: true,
-//     trim: true
-//   },
-
-//   unique_id:{
-//       type:Number
-//   }
-
-// }) 
 
 
 const app = express()
@@ -101,14 +25,6 @@ const app = express()
 app.use(express.json())
 
 
-// app.get('/getdata',async (req,res)=>{
-
-//  await userData.findOne({License_key: req.body.License_key
-//   }).then((user)=>{res.send(user)}).catch((e)=>{res.send("error")})
-// }
-//)
-
-//cheking if username is available while user enters userName
 app.post('/CreateLicenseFile', async (req,res)=>{
  
  if(req.body.Allocated===undefined || req.body.Validity===undefined || req.body.License_key===undefined ){res.status(403).send("Insufficient Information.")}
@@ -229,161 +145,6 @@ app.post('/register_user',async (req,res)=>{
 })
 
 
-// app.post('/user_install1',  async (req,res)=>{
-
-//   if(req.body.License_key === undefined || req.body.License_key.length !== 20)
-//   {
-//     res.status(403).send("License Error!")
-//   }
-
-//   else if(req.body.userName === undefined || req.body.eMail === undefined || req.body.UUID === undefined || req.body.password === undefined )
-//   {
-//     res.status(403).send("Error!")
-//   }
-// else
-// {
-  
-//  await LicenseData.findOne({License_key:req.body.License_key}).then(async (data)=>{
-  
-//   if(data===null ){res.status(403).send("License Error.")}
-//   else if(!data.Allocated){res.status(403).send("License Error.")}
-//   else if(data.Inactive!= undefined && !data.Inactive){res.status(403).send("License Error.")}
-//   else if(data.Inactive && date.subtract(new Date(),data.dateInst).toDays()>data.Days){res.status(403).send("License Error.")}
-
-//   else if(data.Inactive === true ){
-
-//     await LicenseData.findOneAndUpdate(
-//     {License_key:req.body.License_key }, 
-//     {$set: 
-//     { 
-//        Inactive:false,
-//        dateLastUse:new Date()
-//     }
-//   },
-//   {new:true}
-
-// ).then(async (data)=>{
-//   await userData.findOneAndUpdate(
-//     {userName:req.body.userName},
-//     { $set: 
-//       { 
-//          UUID:req.body.UUID,
-//          Inactive:false,
-//          dateInst:data.dateInst,
-//          dateLastUse:new Date(),
-//          License_key:data.Lecense_key,
-//          Validity:data.Validity
-
-
-
-         
-//       }
-//     },
-//     {new:true}
-
-//     ).then((data2)=>{
-//       res.send({
-//         License_key:data2.Lecense_key,
-//         dateInst:data2.dateInst,
-//         Validity:data2.Validity,
-//         Inactive:false,
-//         userName:data2.userName,
-//         eMail:data2.eMail,
-//         UUID:data2.UUID,
-//         dateLastUse:data2.dateLastUse
-
-
-
-//       })
-
-//     }).catch((e)=>{
-
-
-
-//       res.status(503).send("Sorry,Server Unvailable.")
-
-
-
-//   })
-
-// }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable")
-
-// })
-
-
-    
-// }
-
-//   else
-//   {
-//     await LicenseData.findOneAndUpdate
-//     (
-//       { License_key:req.body.License_key }, 
-//       { $set: 
-//         { 
-//            Inactive:false,
-//            dateInst:new Date(),
-//            dateLastUse:new Date()
-//         }
-//       },
-//       {new:true}
-   
-//     ).then(async (data)=>{
-//       await userData.findOneAndUpdate(
-//         {userName:req.body.userName},
-//         { $set: 
-//           { 
-//             License_key:data.Lecense_key,
-//             dateInst:data.dateInst,
-//             Validity:data.Validity,
-//             Inactive:false,
-//             userName:data2.userName,
-//             eMail:data2.eMail,
-//             UUID:data2.UUID,
-//             dateLastUse:data2.dateLastUse
-//           }
-//         },
-//         {new:true}
-
-//         ).then((data2)=>{
-//           res.send({
-//             License_key:data2.Lecense_key,
-//             dateInst:data2.dateInst,
-//             Validity:data2.Validity,
-//             Inactive:false,
-//             userName:data2.userName,
-//             eMail:data2.eMail,
-//             UUID:data2.UUID,
-//             dateLastUse:data2.dateLastUse
-
-
-
-//           })
-
-//         }).catch((e)=>{res.status(503).send("Sorry,Server Unvailable.")})
-
-//     }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable")
-
-//     })
-   
-    
-//   }  
-
-
-  
-
-
-
-
-// }).catch((e)=>{
-//   res.status(503).send("Sorry.Server Unavailable.")
-// })
-
-// }
-
-
-
-// })
 
 app.post('/user_install',async(req,res)=>{
 
@@ -405,90 +166,10 @@ app.post('/user_install',async(req,res)=>{
       else if(data.Inactive!= undefined && !data.Inactive){res.status(403).send("License Error.")}
       else if(data.Inactive=== true && date.subtract(new Date(),data.dateInst).toDays()>data.Days){res.status(403).send("License Error.")}
       
-      // else if(data.Inactive=== true)
-      //   {
-      //     const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster0.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
-      //     const client = await new MongoClient.connect(uri)
-        
-        
-      //   const session = client.startSession()
-      //   const transactionOptions ={
-      //     readPreference:'primary',
-      //     readConcern:{level: 'local'},
-      //     writeConcern:{w:'majority'}
-      //   }
-      
-      // try{
-      //   await session.withTransaction(async ()=>{
-        
-      //     await LicenseData.findOneAndUpdate(
-      //       {License_key:req.body.License_key }, 
-      //       {$set: 
-      //       { 
-      //          Inactive:false,
-      //          dateLastUse:new Date()
-      //       }
-      //     },
-      //     {new:true},
-      //     { session }
-        
-      //   ).then(async (data)=>{
-      //     await userData.findOneAndUpdate(
-      //       {userName:req.body.userName},
-      //       { $set: 
-      //         { 
-      //            UUID:req.body.UUID,
-      //            Inactive:false,
-      //            dateInst:data.dateInst,
-      //            dateLastUse:new Date(),
-      //            License_key:data.Lecense_key,
-      //            Validity:data.Validity
-        
-        
-        
-                 
-      //         }
-      //       },
-      //       {new:true},
-      //       { session }
-        
-      //       ).then(async (data2)=>{
-      //        await res.send({
-      //           License_key:data2.Lecense_key,
-      //           dateInst:data2.dateInst,
-      //           Validity:data2.Validity,
-      //           Inactive:false,
-      //           userName:data2.userName,
-      //           eMail:data2.eMail,
-      //           UUID:data2.UUID,
-      //           dateLastUse:data2.dateLastUse
-        
-        
-        
-      //         })
-        
-      //       }).catch(async (e)=>{
-        
-      //    await  res.status(503).send("Sorry,Server Unavailable.")
-      //      await session.abortTransaction()
-      //      return})
-        
-      //   }).catch((e)=>{
-      //   res.status(503).send("Sorry,Server Unavailable.") })
-      //   },transactionOptions)
-      // }
-      // finally{
-
-      //   await session.endSession()
-      // }  
-        
-
-      // } 
       
 else if(data.Inactive=== true){
-  const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster1.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-
+  const uri = '#################################################################'
   const client = await MongoClient.connect(uri)
   const LicenseData1 = client.db("myFirstDatabase").collection("licensekeydatas")
   const userData1 = client.db("myFirstDatabase").collection("userdatas")
@@ -580,8 +261,7 @@ finally{
 
 else
 {
-  const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster1.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-
+  const uri = '#################################################################'
   const client = await MongoClient.connect(uri)
   const LicenseData1 = client.db("myFirstDatabase").collection("licensekeydatas")
   const userData1 = client.db("myFirstDatabase").collection("userdatas")
@@ -651,13 +331,6 @@ try{
      await res.status(503).send("Sorry,Server Unavailable")
      await session.abortTransaction()
      return})
-  
-  
-  
-  
-      
-
-
 
 
   }).catch(async (e)=>{
@@ -674,163 +347,6 @@ finally{
 })
  
 
-  
-
-// app.post('/userinstall2', async (req,res)=>{
-//  // console.log(req.body.userName)
-  
-//   if(req.body.License_key === undefined || req.body.License_key.length !== 20)
-//   {
-//     res.status(403).send("License Error!")
-//   }
-//   else if(req.body.userName === undefined || req.body.eMail === undefined || req.body.UUID === undefined || req.body.password === undefined )
-//   {
-//     res.status(403).send("Error!")
-//   }
-//  else
-//   {
-//    userData1 = userData(req.body)
-//    userData1.dateInst= new Date()
-//    userData1.dateLastUse = new Date()
-//    userData1.password = await bcrypt.hash(userData1.password , 8)
-//    const user1 = await userData.findOne({ License_key:req.body.License_key })
-//    //const user2 = await userData.findOne({ userName:req.body.userName })
-//    if(user1 && user1.Inactive === false)
-//      { 
-//        res.status(400).send("License Error!")
-//      }
-  
-//    else if(user1 && user1.Inactive === true)
-//     {
-
-//         const user10 =await userData.findOne({License_key:req.body.License_key})
-
-
-//        //  if(user2){
-//        //    res.status(400).send("userName is not available!")
-//        //  }
-//        //  else{
-//        //req.body.dateInst = user1.dateInst
-//        // userData1.dateInst = user1.dateInst
-//        // await userData.deleteOne({ License_key:req.body.License_key })
-//         // await userData1.save().then(()=>{
-//         //       res.send(userData1)}).catch((e)=>{
-//          //        res.status(400).send(e)})
-//       if(user10.userName !== req.body.userName)
-//       {
-//          const user6 = await userData.findOneAndDelete({userName:req.body.userName})
-//        if(user6)
-//        {
-//          const user5 = await userData.findOneAndUpdate
-//          (
-//            { License_key:req.body.License_key }, 
-//            { $set: 
-//              { 
-     
-//                eMail:req.body.eMail,
-//                 password:userData1.password,
-//                 UUID:req.body.UUID,
-//                 userName:req.body.userName,
-//                 Inactive:false,
-//                License_key:user1.License_key,
-//                 dateLastUse: new Date(),
-//                 dateInst:user1.dateInst
-//              }
-//            },
-//            {new:true}
-//           )
-   
-//          if(!user5)
-//            {
-//               res.status(503).send("Sorry,Please try again.")
-//            }
-//           else
-//            {
-//               res.status(200).send(user5)
-//            }
-//        }
-
-//        else 
-//        {
-//           (res.status(503).send("Sorry,Please try again."))
-//        }
-//       } 
-//       else
-//       {
-//         const user5 = await userData.findOneAndUpdate
-//          (
-//            { License_key:userData1.License_key }, 
-//            { $set: 
-//              { 
-     
-//                eMail:req.body.eMail,
-//                 password:userData1.password,
-//                 UUID:req.body.UUID,
-//                 Inactive:false,
-//                 dateLastUse: new Date(),
-//                 dateInst:user1.dateInst
-//              }
-//            },
-//            {new:true}
-//           )
-//           if(!user5)
-//           {
-//              res.status(503).send("Sorry,Please try again.")
-//           }
-//          else
-//           {
-//              res.status(200).send(user5)
-//           }
-   
-
-//       }
-//     }
-    
-//    else
-//      {
-//           //  if(user2){
-//           //   res.status(400).send("userName is not available!")
-//           // }
-//           // else{
-//           // await userData1.save().then(()=>{
-//           //   res.send(userData1)}).catch((e)=>{
-//          //     res.status(503).send("Sorry,installation failed.Please try again.")})
-//           const user =await userData.findOneAndUpdate
-//             (
-//                {userName:req.body.userName},
-//                {$set:
-//                   {
-                    
-     
-//                       eMail:req.body.eMail,
-//                        password:userData1.password,
-//                        UUID:req.body.UUID,
-//                        Inactive:false,
-//                       License_key:req.body.License_key,
-//                        dateLastUse: new Date(),
-//                        dateInst:new Date()
-                    
-//                   }
-//                },  
-//                {new:true}
-//             )
-//            if(!user)
-//             {
-//                 res.status(503).send("Sorry,Please Try Again.")
-//             }  
-//           else
-//             {
-//                 res.status(200).send(user)
-//             }
-
-
-//       }
-//   }
- 
-//   //res.send('testing')
-// })
-
-
 
 
 app.post('/user_uninstall' ,async (req,res)=>{
@@ -845,7 +361,7 @@ app.post('/user_uninstall' ,async (req,res)=>{
         else{
 
 
-          const uri = 'mongodb+srv://GigaYasa:GigaYasa@cluster1.07hd1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+          const uri = '#################################################################'
 
           const client = await MongoClient.connect(uri)
           const LicenseData1 = client.db("myFirstDatabase").collection("licensekeydatas")
@@ -888,11 +404,7 @@ try{
            Inactive:true,
            dateLastUse:new Date(),
           
-          
-  
-  
-  
-           
+                   
         }
       },
       { returnDocument:"after"},
@@ -906,13 +418,6 @@ try{
      await res.status(503).send("Sorry,Server Unavailable")
      await session.abortTransaction()
      return})
-  
-  
-  
-  
-      
-
-
 
 
   }).catch(async (e)=>{
@@ -924,44 +429,15 @@ finally{
   await session.endSession()
 }
 
-        //  userData.findOneAndUpdate(
-        //    {userName:req.body.userName},
-        //    {$set:
-        //      {
-        //        Inactive:true,
-        //      }
-        //    },
-        //    {new:true}
-        //    ).then((data)=>{
-        //      LicenseData.findOneAndUpdate({License_key:data.License_key},
-        //       {$set:
-        //         {
-        //           dateLastUse:new Date(),
-        //           Inactive:true
-        //         }
-        //      }
-        //       ).then((data)=>{res.send("Uninstalled Successfully.")}).catch((e)=>{res.status(503).send("Sorry,server Unavailable.")})
-        //    }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable.")})
 
 
+     }
 
-
-
-
-
-
-
-
-        }
-
-      }
+     }
     }).catch((e)=>{res.status(503).send("Sorry,Server Unavailable.")})
 
  
   }
-
-   
-
 
 })
 
@@ -972,8 +448,6 @@ app.post('/user_data/login' , async (req , res)=>{
   if(req.body.userName ===undefined || req.body.password ===undefined || req.body.UUID ===undefined )
   {res.status(403).send("Error!")}
 
-//  console.log(req.body.eMail )
-//  res.send(req.body.eMail)
  else{
   await userData.findOne({userName:req.body.userName}).then((data)=>{
      if(data===null)res.status(403).send("userName or password incorrect.")
@@ -984,9 +458,6 @@ app.post('/user_data/login' , async (req , res)=>{
        else{
          if(req.body.UUID!=data.UUID){res.status(403).send("Invalid Credentials.")}
          else{
-           //console.log(data.dateLastUse)
-          // data.dateLastUse = new Date()
-           //console.log(data.dateLastUse)
            res.status(200).send(
            {
             License_key:data.License_key,
@@ -1013,18 +484,13 @@ app.get('/user_forgotpass' ,async (req,res)=>{
   if(req.body.eMail === undefined ){res.status(403).send("Error!")}
   else{
 
-//  //password = await bcrypt.hash(req.body.password, 8)
-//  //console.log(password)
-//  //password = req.body.password
-//  //req.body.dateLastUse = await Date.now
-//  //let { password, dateLastUse } = req.body
   await userData.findOne({ eMail:req.body.eMail }).then(async (data)=>{ 
 
   if(data===null){res.status(403).send("Invalid eMail.")}
   else
   {
     const options = {
-      from:"bwsim5gt22@gigayasa.com",
+      from:"#######################################",
       to:req.body.eMail,
       subject:"OTP to reset your BWSIM password",
       text: "Use this OTP and reset your password.  OTP:  "+ data.password+ " Your userName is "+data.userName
@@ -1077,21 +543,7 @@ else {
 
 })
 
-// app.post('/userDatas',(req,res)=>
-// {
-  //  const userData1 = new userData({
 
-  //   name:'Sachin',
-  //   eMail:'sachin.k.sharma99@gmail.com',
-  //   DoL:'23/02/2022',
-  //   unique_id:'123456'
-  //  })
-
-//   userData.save().then(()=>{ res.send(userData)}).catch((e)=>{
-//     res.status(400).send(e)
-//   })
-// }
-// )
 app.patch('/user_updatepass' , async (req,res)=>
 {
   if(req.body.userName === undefined || req.body.password ===undefined)
@@ -1111,33 +563,6 @@ app.patch('/user_updatepass' , async (req,res)=>
 })
 
 
-//sending results to users email
-// sending issue/suggestion 
-// const uploadss = multer({})
-// app.post('/send_results',uploadss.single('Report'),async (req,res)=>{
-
-//   if(req.body.email === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
-//   else{
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-//     to:"support@gigayasa.com",
-//     subject:"Simulation Results!"
-//     // text:""+req.body.message,
-//   //   attachments:{
-//   //   filename:report.zip,
-//   //   content:req.file.buffer
-//   // }
-//   }
-//   await transporter.sendMail(options, (err,info)=>{
-//   if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }}
-// )
 
 
 
@@ -1150,15 +575,12 @@ app.post('/send_results',uploads.single('Report'),async (req,res)=>{
   
   
   const options = {
-    from:"bwsim5gt22@gigayasa.com",
+    from:"############################################",
 
-    // to:req.body.eMail1 + ","+req.body.eMail2,
-
-
+  
     to:req.body.eMail,
     subject:"Your Simulation Results",
-    html:"Greetings," + "<br>"+req.body.message,
-    // text:req.body.message,    
+    html:"Greetings," + "<br>"+req.body.message,   
     attachments:{
     filename: "Report.zip",
     content:req.file.buffer
@@ -1175,10 +597,6 @@ app.post('/send_results',uploads.single('Report'),async (req,res)=>{
 }}
 )
 
-
-// Sending issue suggestion with picture 
-
-
 const uploadss = multer({})
 
 app.post('/send_issue_pic',uploadss.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 3 }]),async (req,res)=>{
@@ -1186,23 +604,17 @@ app.post('/send_issue_pic',uploadss.fields([{ name: 'avatar', maxCount: 1 }, { n
   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.files['gallery'] === undefined )
   {res.status(403).send("Error!")}
   else{
-    // console.log(req.files['gallery'][0].type)
   
   var options = {}
   if(req.files['gallery'].length === 1){
   options = {
-    from:"bwsim5gt22@gigayasa.com",
-
-    // to:req.body.eMail1 + ","+req.body.eMail2,
+    from:"#################################",
 
 
-    to:"support@gigayasa.com",
+    to:"################################",
     subject:req.body.subject,
     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
-    // text:req.body.message, 
-    
-    //  req.files['avatar'][0] -> File
-    //  req.files['gallery'] -> Array
+
     attachments:[{
     // filename:"att.jpg",
     content:req.files['gallery'][0].buffer
@@ -1212,18 +624,15 @@ app.post('/send_issue_pic',uploadss.fields([{ name: 'avatar', maxCount: 1 }, { n
 
 if(req.files['gallery'].length === 2){
 options = {
-  from:"bwsim5gt22@gigayasa.com",
+  from:"#####################################",
 
   // to:req.body.eMail1 + ","+req.body.eMail2,
 
 
-  to:"support@gigayasa.com",
+  to:"#####################################",
   subject:req.body.subject,
   html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
-  // text:req.body.message, 
-  
-  //  req.files['avatar'][0] -> File
-  //  req.files['gallery'] -> Array
+ 
   attachments:[{
   // filename:"att.jpg",
   content:req.files['gallery'][0].buffer
@@ -1237,18 +646,15 @@ options = {
 
 if(req.files['gallery'].length === 3){
 options = {
-  from:"bwsim5gt22@gigayasa.com",
+  from:"######################################",
 
   // to:req.body.eMail1 + ","+req.body.eMail2,
 
 
-  to:"support@gigayasa.com",
+  to:"########################################",
   subject:req.body.subject,
   html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
-  // text:req.body.message, 
-  
-  //  req.files['avatar'][0] -> File
-  //  req.files['gallery'] -> Array
+
   attachments:[{
   // filename:"att.jpg",
   content:req.files['gallery'][0].buffer
@@ -1277,209 +683,15 @@ options = {
 )
 
 
-
-
-
-
-
-
-
-
-// const uploadss = multer({})
-
-// app.post('/send_issue_pic',uploadss.single('Attachment'),async (req,res)=>{
-
-//   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.file === undefined )
-//   {res.status(403).send("Error!")}
-//   else{
-  
-  
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-
-//     // to:req.body.eMail1 + ","+req.body.eMail2,
-
-
-//     to:"support@gigayasa.com",
-//     subject:req.body.subject,
-//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
-//     // text:req.body.message,    
-//     attachments:{
-//     filename: req.file.originalname,
-//     content:req.file.buffer
-//   }
-//   }
-//   await transporter.sendMail(options, (err,info)=>{
-//   if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }}
-// )
-
-
-
-
-
-
-// const uploads = multer({})
-
-// app.post('/send_results',uploads.single('Report'),async (req,res)=>{
-
-//   if(req.body.eMail === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
-//   else{
-  
-  
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-
-//     // to:req.body.eMail1 + ","+req.body.eMail2,
-
-
-//     to:req.body.eMail,
-//     subject:"Your Simulation Results",
-//     html:"Greetings," + "<br>"+req.body.message,
-//     // text:req.body.message,    
-//     attachments:{
-//     filename: "Report.zip",
-//     content:req.file.buffer
-//   }
-//   }
-//   await transporter.sendMail(options, (err,info)=>{
-//   if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }}
-// )
-
-
-
-
-
-// const uploadss = multer({})
-
-// app.post('/send_issue_pic',uploadss.single('Attachment'),async (req,res)=>{
-
-//   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.file === undefined )
-//   {res.status(403).send("Error!")}
-//   else{
-  
-  
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-
-//     // to:req.body.eMail1 + ","+req.body.eMail2,
-
-
-//     to:"support@gigayasa.com",
-//     subject:req.body.subject,
-//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",
-//     // text:req.body.message,    
-//     attachments:{
-//     filename: req.file.originalname,
-//     content:req.file.buffer
-//   }
-//   }
-//   await transporter.sendMail(options, (err,info)=>{
-//   if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }}
-// )
-
-
-// const uploadsss = multer({ dest: 'uploads/' })
-
-// // app.post('/send_issue_pic',uploadsss.fields([{ name: 'attachment', maxCount: 1 }]),async (req,res)=>{
-//   app.post('/send_issue_pic',uploadsss.single('attachment'),async (req,res)=>{  
-
-//   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined || req.files === undefined ){res.status(403).send("Error!")}
-//   else{
-
-//   // filename1 = "" 
-//   // if( req.body.filetype === "jpg" ){
-//   //   filename1 = "Image.jpg"
-//   // }
-//   // else if( req.body.filetype === "jpeg" ){
-//   //   filename1 = "Image.jpeg"
-//   // }
-//   // else if(req.body.filetype === "png")
-//   // {
-//   //   filename1 = "Image.png"
-//   // }
-//   // else if(req.body.filetype === "svg")
-//   // {
-//   //   filename1 = "Image.svg"
-//   // }
-//   // else if(req.body.filetype === "eps")
-//   // {
-//   //   filename1 = "Image.eps"
-//   // }
-//   // else if(req.body.filetype === "bmp")
-//   // {
-//   //   filename1 = "Image.bmp"
-//   // }
-
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-//     to:"support@gigayasa.com",
-//     subject:req.body.subject,
-
-//     // text:"username:   "+"\n"+req.body.username +"\n"+
-//     //      "Email:         "+"\n"+req.body.Email+"\n"+
-//     //      "DateOfReport:     "+"\n"+new Date() +"\n"+
-//     //      "Type:             "+"\n"+req.body.Type +"\n"+
-//     //      "Description:       "+"\n"+req.body.Description,
-
-//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.description+"",     
-    
-  
-//   //   attachments:[{
-//   //   // filename: "1",
-//   //   content:req.files['Attachment'][0].buffer
-//   // }
-//   // ,
-//   // {
-//   //   content:req.files['Attachment'][1].buffer
-//   // }
-// // ]
-
-//   }
-//   await transporter.sendMail(options, (err,info)=>{
-//   if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }}
-// )
-
 app.post('/send_issue',async (req,res)=>{
 
   if(req.body.email === undefined || req.body.username === undefined || req.body.type === undefined || req.body.description === undefined || req.body.subject === undefined ){res.status(403).send("Error!")}
   else{
   const options = {
-    from:"bwsim5gt22@gigayasa.com",
-    to:"support@gigayasa.com",
+    from:"##############################",
+    to:"#########################################",
     subject:req.body.subject,
-    // text:"<b>username:</b>   "+"\n"+req.body.username +"\n"+
-    //      "Email:         "+"\n"+req.body.Email+"\n"+
-    //      "DateOfReport:     "+"\n"+new Date() +"\n"+
-    //      "Type:             "+"\n"+req.body.Type +"\n"+
-    //      "Description:       "+"\n"+req.body.Descrition,
+  
     // 
     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.type+"<br><b>Description :</b>"+req.body.descrition+""
     }
@@ -1496,65 +708,6 @@ app.post('/send_issue',async (req,res)=>{
 
 
 
-
-
-
-
-// app.post('/send_suggestion',async (req,res)=>{
-
-//   if(req.body.Email === undefined ){res.status(403).send("Error!")}
-//   else{
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-//     to:"support@gigayasa.com",
-//     subject:req.body.subject,
-//     // text:"<b>username:</b>   "+"\n"+req.body.username +"\n"+
-//     //      "Email:         "+"\n"+req.body.Email+"\n"+
-//     //      "DateOfReport:     "+"\n"+new Date() +"\n"+
-//     //      "Type:             "+"\n"+req.body.Type +"\n"+
-//     //      "Description:       "+"\n"+req.body.Descrition,
-//     // 
-//     html:"<b>username    :</b>"+ req.body.username +"<br><b>Email       :</b>"+req.body.Email + "<br><b>DateOfReport:</b>"+new Date()+ "<br><b>Type         :</b>"+req.body.Type+"<br><b>Description :</b>"+req.body.Descrition+""
-//     }
-//    await transporter.sendMail(options, (err,info)=>{
-//     if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }}
-// )
-
-
- 
-// app.post('/send_results',uploads.single('Report'),async (req,res)=>{
-
-//   if(req.body.eMail === undefined || req.file === undefined || req.body.message === undefined ){res.status(403).send("Error!")}
-//   else{
-//   const options = {
-//     from:"bwsim5gt22@gigayasa.com",
-//     to:req.body.eMail,
-//     subject:"Your Simulation Results!",
-
-//     text:req.body.message,
-//     attachments:{
-//       filename:'Report.zip',
-//       content:req.file.buffer
-//     }
-//   }
-//   await transporter.sendMail(options, (err,info)=>{
-  
-//     if(err){
-//     res.status(503).send("Sorry,Service Unavailable at this moment.")
-//     console.log(err)
-//     return 
-//     }
-//     res.status(200).send("Successful! Check your eMail.")
-//   })
-// }
-// })
 
 const port = process.env.PORT || 3000
 
