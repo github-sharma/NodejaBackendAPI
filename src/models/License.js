@@ -27,10 +27,6 @@ const userSchema2 = new mongoose.Schema({
     type:Boolean 
   }
  
-//   Allocated:{
-//     type:Boolean,
-//     default:false
-//   }
 
    }) 
 
